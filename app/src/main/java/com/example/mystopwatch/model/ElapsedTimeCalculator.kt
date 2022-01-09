@@ -1,4 +1,4 @@
-package com.example.mystopwatch
+package com.example.mystopwatch.model
 
 /**
  * Вычислять прошедшее время будет класс ElapsedTimeCalculator, который мы передаем вторым
@@ -19,4 +19,11 @@ class ElapsedTimeCalculator(
         }
         return timePassedSinceStart + state.elapsedTime
     }
+}
+
+/**
+ * Текущее время, нужное для запуска секундомера, мы будем брать через интерфейс.
+ */
+interface TimestampProvider {
+    fun getMilliseconds(): Long
 }

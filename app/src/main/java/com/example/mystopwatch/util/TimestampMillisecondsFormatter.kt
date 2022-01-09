@@ -1,4 +1,4 @@
-package com.example.mystopwatch
+package com.example.mystopwatch.util
 
 /**
  * Класс, который переводит миллисекунды в понятный формат.

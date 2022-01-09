@@ -1,4 +1,4 @@
-package com.example.mystopwatch
+package com.example.mystopwatch.model
 
 /**
  * Определять состояния секундомера (Running или Paused) мы будем в классе StopwatchStateCalculator.

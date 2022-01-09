@@ -1,4 +1,4 @@
-package com.example.mystopwatch
+package com.example.mystopwatch.model
 
 /**
  * Определим возможные состояния для нашего секундомера. Их будет всего два:
