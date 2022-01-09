@@ -1,4 +1,6 @@
-package com.example.mystopwatch
+package com.example.mystopwatch.model
+
+import com.example.mystopwatch.util.TimestampMillisecondsFormatter
 
 /**
  * Функционал с точки зрения пользователя: как запускать все эти процессы по
@@ -31,8 +33,7 @@ class StopwatchStateHolder(
     fun getStringTimeRepresentation(): String {
         val elapsedTime = when (val currentState = currentState) {
             is StopwatchState.Paused -> currentState.elapsedTime
-            is StopwatchState.Running ->
-                elapsedTimeCalculator.calculate(currentState)
+            is StopwatchState.Running -> elapsedTimeCalculator.calculate(currentState)
         }
         return timestampMillisecondsFormatter.format(elapsedTime)
     }

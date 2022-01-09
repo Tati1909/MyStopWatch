@@ -1,4 +1,4 @@
-package com.example.mystopwatch
+package com.example.mystopwatch.model
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,11 +11,9 @@ import kotlinx.coroutines.flow.StateFlow
 то экран будет постоянно подвисать на время всех вычислений текущего времени, обновления
 состояния и т. д.
 Чтобы этого не происходило, нам нужно написать класс, который выполняет все
-операции асинхронно. То есть перенести работу всех написанных выше функций в другой поток. Тут
+операции асинхронно. То есть перенести работу  функций в другой поток. Тут
 как раз и пригодится StateFlow.
 
-Класс StopwatchListOrchestrator написан с заделом на будущее, где мы будем управлять сразу
-несколькими секундомерами одновременно.
 Функции pause() и stop() останавливают работу корутины, потому что
 секундомер в это время не нужно обновлять. А ещё stop() обнуляет таймер. Обратите внимание, что
 работа корутины останавливается через функцию cancelChildren(), а не cancel(). Функция
@@ -23,17 +21,14 @@ cancelChildren() останавливает работу, но сохраняе�
 корутины. Это нужно как раз на тот случай, если пользователь нажал не Стоп, а Пауза на
 секундомере.
  */
-class StopwatchListOrchestrator(
+class StopwatchImpl(
     private val stopwatchStateHolder: StopwatchStateHolder,
     private val scope: CoroutineScope,
-) {
+) : Stopwatch {
+
     private var job: Job? = null
     private val mutableTicker = MutableStateFlow("")
-    val ticker: StateFlow<String> = mutableTicker
-    fun start() {
-        if (job == null) startJob()
-        stopwatchStateHolder.start()
-    }
+    override val ticker: StateFlow<String> = mutableTicker
 
     /**
      * Функция  создает coroutine job, которая будет
@@ -41,6 +36,11 @@ class StopwatchListOrchestrator(
     20 миллисекунд проверяется, нужна ли еще эта работа. Обновление происходит через StateFlow,
     который запускается из UI.
      */
+    override fun start() {
+        if (job == null) startJob()
+        stopwatchStateHolder.start()
+    }
+
     private fun startJob() {
         scope.launch {
             while (isActive) {
@@ -51,12 +51,12 @@ class StopwatchListOrchestrator(
         }
     }
 
-    fun pause() {
+    override fun pause() {
         stopwatchStateHolder.pause()
         stopJob()
     }
 
-    fun stop() {
+    override fun stop() {
         stopwatchStateHolder.stop()
         stopJob()
         clearValue()
